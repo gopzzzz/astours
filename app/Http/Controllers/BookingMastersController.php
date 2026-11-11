@@ -58,6 +58,8 @@ class BookingMastersController extends Controller
             'cus_id' => 'required|integer',
         ]);
 
+        $touramount=DB::table('tours')->where('id',$request->tour_id)->value('amount');
+
 
         DB::table('bookingmasters')->insert([
 
@@ -82,6 +84,8 @@ class BookingMastersController extends Controller
             'payment_status' => $request->payment_status,
 
             'payment_mode' => $request->payment_mode,
+
+            'packagecost' =>$touramount,
 
             'received_amount' => $request->received_amount,
 

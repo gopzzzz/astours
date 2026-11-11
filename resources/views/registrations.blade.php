@@ -1815,7 +1815,7 @@
     </div>
 
 </div>
-<script src="{{asset('plugins/jquery/jquery.min.js')}}"></script>
+<script src="{{asset('public/plugins/jquery/jquery.min.js')}}"></script>
 <script>
     
     $('#editStaffModal').on('show.bs.modal', function (event) {

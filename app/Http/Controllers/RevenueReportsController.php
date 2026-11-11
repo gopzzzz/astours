@@ -13,13 +13,16 @@ class RevenueReportsController extends Controller
                 'id',
                 'booking_personname',
                 'tour_id',
-                'payment_status',
+                'discount',
                 'payment_mode',
                 'received_amount',
                 'pending_amount',
-                'booking_status'
+                'totalamount',
+                'bookingdate'
+              
             )
             ->orderBy('id', 'desc')
+            ->where('booking_status',1)
             ->get();
 
         return view('revenue_reports', compact('revenueReports'));

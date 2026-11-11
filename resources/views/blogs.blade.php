@@ -850,7 +850,7 @@
             <div class="row mb-2">
 
                 <div class="col-sm-6">
-                    <h1>Blogs</h1>
+                    <h1>Reviews</h1>
                 </div>
 
                 <div class="col-sm-6">
@@ -862,7 +862,7 @@
                         </li>
 
                         <li class="breadcrumb-item active">
-                            Blogs
+                            Reviews
                         </li>
 
                     </ol>
@@ -930,7 +930,7 @@
                 <div class="card-header">
 
                     <h3 class="card-title">
-                        Blog List
+                        Review List
                     </h3>
 
 
@@ -942,7 +942,7 @@
                             data-target="#addBlogModal">
 
                         <i class="fas fa-plus"></i>
-                        Add Blog
+                        Add Review
 
                     </button>
 
@@ -966,11 +966,11 @@
                                         </th>
 
                                         <th>
-                                            Blog Name
+                                           Customer Name
                                         </th>
 
                                         <th>
-                                            Description
+                                            Review About Trip
                                         </th>
 
                                         <th>
@@ -1052,7 +1052,7 @@
 
                                                 <div class="blog-image-box">
 
-                                                    <img src="{{ asset('uploads/' . $blog->image) }}"
+                                                    <img src="{{ asset('public/uploads/' . $blog->image) }}"
                                                          alt="{{ $blog->image }}"
                                                          class="blog-image">
 
@@ -1140,11 +1140,11 @@
                                                     </div>
 
                                                     <h5>
-                                                        No Blogs Found
+                                                        No Reviews Found
                                                     </h5>
 
                                                     <p>
-                                                        There are currently no blogs available.
+                                                        There are currently no Reviews available.
                                                     </p>
 
                                                 </div>
@@ -1200,11 +1200,11 @@
                 <div>
 
                     <h4>
-                        Add Blog
+                        Add Review
                     </h4>
 
                     <p>
-                        Enter blog information
+                        Enter Reviews 
                     </p>
 
                 </div>
@@ -1245,12 +1245,12 @@
                             <div>
 
                                 <h5>
-                                    Blog Information
+                                    Reviews 
                                 </h5>
 
-                                <p>
+                                <!-- <p>
                                     Enter basic blog details
-                                </p>
+                                </p> -->
 
                             </div>
 
@@ -1267,7 +1267,7 @@
                                 <div class="blog-field">
 
                                     <label>
-                                        Blog Name <span>*</span>
+                                        Customer Name <span>*</span>
                                     </label>
 
                                     <div class="blog-input">
@@ -1343,7 +1343,7 @@
                                 <div class="blog-field">
 
                                     <label>
-                                        Description <span>*</span>
+                                        Reviews <span>*</span>
                                     </label>
 
                                     <textarea name="description"
@@ -1385,7 +1385,7 @@
 
                         <i class="fas fa-save"></i>
 
-                        Save Blog
+                        Save Reviews
 
                     </button>
 
@@ -1427,12 +1427,12 @@
                 <div>
 
                     <h4>
-                        Edit Blog
+                        Edit Review
                     </h4>
 
-                    <p>
+                    <!-- <p>
                         Update blog information
-                    </p>
+                    </p> -->
 
                 </div>
 
@@ -1474,11 +1474,11 @@
                             <div>
 
                                 <h5>
-                                    Blog Information
+                                    Reviews 
                                 </h5>
 
                                 <p>
-                                    Update blog details
+                                    Update Review details
                                 </p>
 
                             </div>
@@ -1496,7 +1496,7 @@
                                 <div class="blog-field">
 
                                     <label>
-                                        Blog Name <span>*</span>
+                                        Customer Name <span>*</span>
                                     </label>
 
                                     <div class="blog-input">
@@ -1572,14 +1572,14 @@
                                 <div class="blog-field">
 
                                     <label>
-                                        Description <span>*</span>
+                                        Reviews <span>*</span>
                                     </label>
 
                                     <textarea name="description"
                                               id="edit_description"
                                               class="form-control blog-textarea"
                                               rows="5"
-                                              placeholder="Enter blog description"
+                                              placeholder="Enter Reviews "
                                               required></textarea>
 
                                 </div>
@@ -1606,7 +1606,7 @@
                                         <div class="current-blog-image-info">
 
                                             <strong>
-                                                Current Blog Image
+                                                Current Customer Image
                                             </strong>
 
                                             <span id="edit_image_name">
@@ -1650,7 +1650,7 @@
 
                         <i class="fas fa-save"></i>
 
-                        Update Blog
+                        Update Review
 
                     </button>
 
@@ -1667,7 +1667,8 @@
 
 
 
-<script src="{{ asset('plugins/jquery/jquery.min.js') }}"></script>
+
+<script src="{{asset('public/plugins/jquery/jquery.min.js')}}"></script>
 
 
 <script>
@@ -1702,10 +1703,10 @@ $('#editBlogModal').on('show.bs.modal', function (event) {
 
     // Image preview
 
-    if (image) {
+    if (image) { 
 
         $('#edit_image_preview')
-            .attr('src', "{{ asset('uploads') }}/" + image)
+            .attr('src', "{{ asset('public/uploads') }}/" + image)
             .show();
 
     }

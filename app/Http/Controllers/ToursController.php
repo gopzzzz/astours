@@ -4,19 +4,82 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Pagination\Paginator;
+use Symfony\Component\HttpFoundation\StreamedResponse;
+use Illuminate\Support\Str;
 
 class ToursController extends Controller
 {
     // LIST
-    public function index()
+    public function index(Request $request)
     {
-        $tours = DB::table('tours')
-            ->orderBy('id', 'asc')
-            ->get();
+    $today=date('y-m-d');
+    $tours = DB::table('tours')
+    ->when($request->filled('search'), function ($query) use ($request) {
+        $query->where('tourname', 'like', '%' . $request->search . '%');
+    })
+    ->when($request->filled('from_date'), function ($query) use ($request) {
+        $query->whereDate('date', '>=', $request->from_date);
+    })
+    ->when($request->filled('to_date'), function ($query) use ($request) {
+        $query->whereDate('date', '<=', $request->to_date);
+    })
+    ->where('date','>',$today)
+    ->orderBy('id', 'desc')
+    ->paginate(10)
+    ->withQueryString();
         $staff=DB::table('staff_registrations')->get();
 
         return view('tours', compact('tours','staff'));
     }
+
+   public function export(Request $request)
+{
+    $tours = DB::table('tours')
+        ->when($request->filled('search'), function ($query) use ($request) {
+            $query->where('tourname', 'like', '%' . $request->search . '%');
+        })
+        ->when($request->filled('from_date'), function ($query) use ($request) {
+            $query->whereDate('date', '>=', $request->from_date);
+        })
+        ->when($request->filled('to_date'), function ($query) use ($request) {
+            $query->whereDate('date', '<=', $request->to_date);
+        })
+        ->orderBy('id', 'desc')
+        ->get();
+
+    return response()->streamDownload(function () use ($tours) {
+
+        $file = fopen('php://output', 'w');
+
+        // CSV Header
+        fputcsv($file, [
+            'ID',
+            'Travel Mode',
+            'Tour Name',
+            'Price',
+            'Date',
+            'Total Seat',
+            'Pickup Locations'
+        ]);
+
+        // CSV Data
+        foreach ($tours as $tour) {
+            fputcsv($file, [
+                $tour->id,
+                $tor->package_type,
+                $tour->tourname,
+                $tour->amount,
+                $tour->date,
+                 $tour->total_seats,
+                $tour->pickuplocations
+            ]);
+        }
+
+        fclose($file);
+
+    }, 'tours.csv');
+}
 
 
     // ADD
@@ -44,9 +107,15 @@ class ToursController extends Controller
 
         $request->image->move($uploadPath, $imageName);
 
+        $slug = Str::slug(
+            $request->tourname . '-' . $request->date
+        );
+
         DB::table('tours')->insert([
             'tourname' => $request->tourname,
+            'package_type' => $request->mode,
             'image' => $imageName,
+            'slug'  =>$slug,
             'features' => $request->features,
             'description' => $request->description,
             'amount' => $request->amount,
@@ -116,6 +185,7 @@ class ToursController extends Controller
             ->where('id', $id)
             ->update([
                 'tourname' => $request->tourname,
+                'package_type' => $request->mode,
                 'image' => $imageName,
                 'features' => $request->features,
                 'description' => $request->description,

@@ -1003,6 +1003,107 @@
     }
 
 }
+/* Filter Form */
+.tour-filter-form {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+}
+
+/* Inputs */
+.tour-filter-form input {
+    height: 42px;
+    padding: 0 12px;
+    border: 1px solid #dcdcdc;
+    border-radius: 6px;
+    background: #fff;
+    color: #333;
+    font-size: 14px;
+    outline: none;
+    box-sizing: border-box;
+}
+
+.tour-filter-form input[type="text"] {
+    width: 240px;
+}
+
+.tour-filter-form input[type="date"] {
+    width: 160px;
+}
+
+.tour-filter-form input:focus {
+    border-color: #333;
+}
+
+/* Search Button */
+.tour-filter-form .btn-search {
+    height: 42px;
+    padding: 0 20px;
+    border: none;
+    border-radius: 6px;
+    background: #222;
+    color: #fff;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.tour-filter-form .btn-search:hover {
+    background: #000;
+}
+
+/* Clear Button */
+.tour-filter-form .btn-clear {
+    height: 42px;
+    display: inline-flex;
+    align-items: center;
+    padding: 0 18px;
+    border: 1px solid #dcdcdc;
+    border-radius: 6px;
+    background: #fff;
+    color: #555;
+    font-size: 14px;
+    text-decoration: none;
+    box-sizing: border-box;
+}
+
+.tour-filter-form .btn-clear:hover {
+    background: #f5f5f5;
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+    .tour-filter-form {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .tour-filter-form input[type="text"],
+    .tour-filter-form input[type="date"],
+    .tour-filter-form .btn-search,
+    .tour-filter-form .btn-clear {
+        width: 100%;
+    }
+} 
+.btn-export {
+    height: 42px;
+    display: inline-flex;
+    align-items: center;
+    padding: 0 18px;
+    border-radius: 6px;
+    background: #198754;
+    color: #fff;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.btn-export:hover {
+    background: #157347;
+    color: #fff;
+}
+
+
 </style>
 
 <div class="content-wrapper">
@@ -1077,6 +1178,40 @@
 
             @endif
 
+           <form method="GET" action="{{ url('tours') }}" class="tour-filter-form">
+
+    <input
+        type="text"
+        name="search"
+        placeholder="Search tour..."
+        value="{{ request('search') }}"
+    >
+
+    <input
+        type="date"
+        name="from_date"
+        value="{{ request('from_date') }}"
+    >
+
+    <input
+        type="date"
+        name="to_date"
+        value="{{ request('to_date') }}"
+    >
+
+    <button type="submit" class="btn-search">
+        Search
+    </button>
+
+    <a href="{{ url('tours') }}" class="btn-clear">
+        Clear
+    </a>
+<a href="{{ route('tours.export', request()->query()) }}"
+   class="btn-export">
+    Export CSV
+</a>
+
+</form>
 
             <div class="card">
 
@@ -1113,7 +1248,11 @@
 
                         <th>#</th>
 
+                          <th>Mode</th>
+
                         <th>Tour</th>
+
+                         <th></th>
 
                         <th>Schedule</th>
 
@@ -1141,6 +1280,13 @@
                                     {{ $tour->id }}
                                 </span>
                             </td>
+                              <td>
+                                <span class="tour-id">
+                                    @if($tour->package_type == 1) Bus @else Train @endif
+                                </span>
+                            </td>
+
+
 
 
                             <!-- Tour -->
@@ -1148,7 +1294,7 @@
 
                                 <div class="tour-name-cell">
 
-                                    <img src="{{ asset('uploads/tours/' . $tour->image) }}"
+                                    <img src="{{ asset('public/uploads/tours/' . $tour->image) }}"
                                          alt="{{ $tour->tourname }}"
                                          class="tour-list-image">
 
@@ -1167,6 +1313,15 @@
                                 </div>
 
                             </td>
+
+                             <td>
+
+                                <a href="@if($tour->package_type == 1) {{url('booknow/'.$tour->slug)}} @else # @endif" target="_blank">
+                                <button type="button" class="btn btn-sm btn-success">  Check Seats </button></a>
+                              
+
+                            </td>
+
 
 
                             <!-- Schedule -->
@@ -1201,11 +1356,16 @@
 
                             <!-- Seats -->
                             <td>
+                            
+                            
+
+                            <a href="@if($tour->package_type == 1) {{url('booknow/'.$tour->slug)}} @else # @endif" target="_blank">
 
                                 <span class="tour-seat-badge">
                                     <i class="fas fa-users"></i>
                                     {{ $tour->total_seats }}
                                 </span>
+                            </a>
 
                             </td>
 
@@ -1245,7 +1405,8 @@
                                         data-features="{{ e($tour->features) }}"
                                         data-description="{{ e($tour->description) }}"
                                         data-image="{{ $tour->image }}"
-                                        data-staff="{{$tour->staff_id}}">
+                                        data-staff="{{$tour->staff_id}}"
+                                         data-package_type="{{$tour->package_type}}">
 
                                     <i class="fas fa-edit"></i>
                                     Edit
@@ -1295,6 +1456,10 @@
                 </tbody>
 
             </table>
+
+           <div class="pagination-wrapper">
+    {{ $tours->withQueryString()->links() }}
+</div>
 
 
                     </div>
@@ -1367,6 +1532,30 @@
 
 
                         <div class="row">
+
+                        
+                            <div class="col-md-3">
+
+                                <label>
+                                    Travel Mode <b>*</b>
+                                </label>
+
+                                <div class="tour-form-input amount-field">
+                                    <i class="fas fa-subway"></i>
+
+                                     <select name="mode" class="form-control" id="edit_travel_mode" >
+                                      
+                                        <option value="1">Bus</option>
+
+                                         <option value="2">Train</option>
+                                      
+                                    </select>
+
+                                  
+
+                                </div>
+
+                            </div>
 
                             <div class="col-md-3">
 
@@ -1760,6 +1949,30 @@
 
                         <div class="row">
 
+                          <div class="col-md-3">
+
+                                <label>
+                                    Travel Mode <b>*</b>
+                                </label>
+
+                                <div class="tour-form-input amount-field">
+
+                                <i class="fas fa-subway"></i>
+
+                                     <select name="mode" class="form-control"  >
+                                      
+                                        <option value="1">Bus</option>
+
+                                         <option value="2">Train</option>
+                                      
+                                    </select>
+
+                                  
+
+                                </div>
+
+                            </div>
+
                             <div class="col-md-3">
 
                                 <label>Tour Name <b>*</b></label>
@@ -2018,7 +2231,7 @@
     </div>
 
 </div>
-<script src="{{asset('plugins/jquery/jquery.min.js')}}"></script>
+<script src="{{asset('public/plugins/jquery/jquery.min.js')}}"></script>
 <script>
 $(document).ready(function () {
 
@@ -2038,6 +2251,7 @@ $(document).ready(function () {
         var description = button.attr('data-description');
         var image       = button.attr('data-image');
         var staff       = button.attr('data-staff');
+         var package_type       = button.attr('data-package_type');
 
 
         // Fill modal inputs
@@ -2059,12 +2273,14 @@ $(document).ready(function () {
 
         $('#edit_staff_name').val(staff);
 
+         $('#edit_travel_mode').val(package_type);
+
 
         // Current image
         if (image) {
 
             $('#edit_tour_image')
-                .attr('src', "{{ asset('uploads/tours') }}/" + image);
+                .attr('src', "{{ asset('public/uploads/tours') }}/" + image);
 
             $('#edit_image_name').text(image);
 

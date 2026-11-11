@@ -84,13 +84,23 @@
 }
 
 .booking-id {
-    background: #eef4ff;
-    color: #0d6efd;
+    background: #4475cf;
+    color: #feffff;
     padding: 6px 9px;
     border-radius: 6px;
     font-weight: 700;
     font-size: 12px;
 }
+
+.booking-confirm {
+    background: #189338;
+    color: #f7faf8;
+    padding: 6px 9px;
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: 12px;
+}
+
 
 .customer-name {
     font-weight: 700;
@@ -198,6 +208,91 @@
         flex-direction: column;
     }
 }
+.booking-filter {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+}
+
+.booking-filter input {
+    height: 40px;
+    padding: 0 12px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    outline: none;
+}
+
+.booking-filter input[type="text"] {
+    width: 240px;
+}
+
+.booking-filter input[type="date"] {
+    width: 160px;
+}
+
+.booking-filter button,
+.booking-filter a {
+    height: 40px;
+    padding: 0 16px;
+    border-radius: 5px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+}
+
+.booking-filter button {
+    border: 0;
+    background: #222;
+    color: #fff;
+    cursor: pointer;
+}
+
+.booking-filter a {
+    border: 1px solid #ddd;
+    color: #333;
+    background: #fff;
+}
+
+.booking-filter .btn-export {
+    background: #198754;
+    border-color: #198754;
+    color: #fff;
+}
+
+@media (max-width: 768px) {
+    .booking-filter {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .booking-filter input,
+    .booking-filter input[type="text"],
+    .booking-filter input[type="date"],
+    .booking-filter button,
+    .booking-filter a {
+        width: 100%;
+        box-sizing: border-box;
+    }
+}
+.btn-export {
+    height: 42px;
+    display: inline-flex;
+    align-items: center;
+    padding: 0 18px;
+    border-radius: 6px;
+    background: #198754;
+    color: #fff;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.btn-export:hover {
+    background: #157347;
+    color: #fff;
+}
 </style>
 
 
@@ -235,6 +330,63 @@
                     </div>
                 @endif
 
+                   <form method="GET" action="{{ route('bookings.list') }}" class="booking-filter">
+
+
+                   <select name="tour_id" id="tour_id" class="form-select" required>
+    <option value="">Select Tour</option>
+
+    @foreach($tours as $tour)
+        <option value="{{ $tour->id }}"
+            {{ old('tour_id') == $tour->id ? 'selected' : '' }}>
+            {{ $tour->tourname }} - (@if($tour->package_type==1) BUS @else TRAIN @endif)  -
+            {{ \Carbon\Carbon::parse($tour->date)->format('d-m-Y') }}
+        </option>
+    @endforeach
+</select>
+
+    <input
+        type="text"
+        name="search"
+        placeholder="Search customer name , phone number ..."
+        value="{{ request('search') }}"
+    >
+
+    
+
+    <input
+        type="date"
+        name="from_date"
+        value="{{ request('from_date') }}"
+    >
+
+    <input
+        type="date"
+        name="to_date"
+        value="{{ request('to_date') }}"
+    >
+
+    <button type="submit" class="btn-search">
+        Search
+    </button>
+
+    <a href="{{ url('bookinglist') }}" class="btn-clear"> 
+        Clear
+    </a>
+
+     <a href="{{ route('bookings.export', request()->query()) }}"
+       class="btn-export">
+        Export CSV
+    </a>
+
+     <a href="{{ route('bookings.passengerexport', request()->query()) }}"
+       class="btn-export">
+        Export Passenger Details
+    </a>
+
+
+</form>
+
 
                 <div class="booking-list-card">
 
@@ -244,15 +396,18 @@
 
                             <thead>
                                 <tr>
-                                    <th>ID</th>
+                                    <th>Booking ID</th>
                                     <th>Customer</th>
                                     <th>Tour</th>
                                     <th>Booking Date</th>
                                     <th>Persons</th>
+                                    <th>Package Cost</th>
+                                    
+                                    <th>Addons</th>
+                                    <th>Discount</th>
+                                    <th>Advance</th>
+                                    <th>Balance</th>
                                     <th>Total Amount</th>
-                                    <th>Received</th>
-                                    <th>Pending</th>
-                                    <th>Payment</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -264,9 +419,18 @@
                                     <tr>
 
                                         <td>
-                                            <span class="booking-id">
+                                             @if($booking->booking_status == 1)
+                                            <span class="booking-confirm">
                                                 #{{ $booking->id }}
                                             </span>
+                                             @else 
+
+                                              <span class="booking-id">
+                                                #{{ $booking->id }}
+                                            </span>
+
+
+                                             @endif
                                         </td>
 
                                         <td>
@@ -298,43 +462,37 @@
                                             </span>
                                         </td>
 
+                                          <td>
+                                            ₹ {{ number_format($booking->packagecost * $booking->totalnumber, 2) }}
+                                        </td>
+
+                                          
+
+                                          <td>
+                                            ₹ {{ number_format($booking->addonamount, 2) }}
+                                        </td>
+
+                                          <td>
+                                            ₹ {{ number_format($booking->discount, 2) }}
+                                        </td>
+
+                                         <td>
+                                            ₹ {{ number_format($booking->received_amount, 2) }}
+                                        </td>
+
+                                         <td>
+                                            ₹ {{ number_format($booking->pending_amount, 2) }}
+                                        </td>
+
+
                                         <td>
                                             <span class="booking-amount">
                                                 ₹ {{ number_format($booking->totalamount, 2) }}
                                             </span>
                                         </td>
 
-                                        <td>
-                                            ₹ {{ number_format($booking->received_amount, 2) }}
-                                        </td>
-
-                                        <td>
-                                            ₹ {{ number_format($booking->pending_amount, 2) }}
-                                        </td>
-
-                                        <td>
-
-                                            @if($booking->payment_status == 0)
-
-                                                <span class="payment-badge payment-pending">
-                                                    Pending
-                                                </span>
-
-                                            @elseif($booking->payment_status == 1)
-
-                                                <span class="payment-badge payment-partial">
-                                                    Partially Paid
-                                                </span>
-
-                                            @else
-
-                                                <span class="payment-badge payment-paid">
-                                                    Paid
-                                                </span>
-
-                                            @endif
-
-                                        </td>
+                                     
+                                      
 
                                         <td>
 
@@ -376,6 +534,10 @@
 
                         </table>
 
+                        <div class="pagination-wrapper">
+    {{ $bookings->links() }}
+</div>
+
                     </div>
 
                 </div>
@@ -385,6 +547,6 @@
     </section>
 
 </div>
-<script src="{{asset('plugins/jquery/jquery.min.js')}}"></script>
+<script src="{{asset('public/plugins/jquery/jquery.min.js')}}"></script>
 
 @endsection

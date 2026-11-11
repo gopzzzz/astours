@@ -447,33 +447,40 @@
                                             #
                                         </th>
 
+                                         <th>
+                                           Date
+                                        </th>
+
+
                                         <th>
                                             Booking Person Name
                                         </th>
 
                                         <th>
-                                            Tour ID
+                                            Booking Id
                                         </th>
 
-                                        <th>
-                                            Payment Status
-                                        </th>
 
                                         <th>
-                                            Payment Mode
+                                          Total Amount
                                         </th>
 
                                         <th>
                                             Received Amount
                                         </th>
 
+                                        
+                                        <th>
+                                            Discount
+                                        </th>
+
                                         <th>
                                             Pending Amount
                                         </th>
 
-                                        <th>
+                                        <!-- <th>
                                             Booking Status
-                                        </th>
+                                        </th> -->
 
                                     </tr>
 
@@ -503,6 +510,13 @@
                                                 </span>
 
                                             </td>
+
+<td>
+    <span >
+        {{ \Carbon\Carbon::parse($report->bookingdate)->format('d-m-Y') }}
+    </span>
+</td>
+
 
 
 
@@ -545,11 +559,13 @@
 
                                             <!-- TOUR ID -->
 
+                                            
+
                                             <td>
 
                                                 <span class="revenue-tour-id">
 
-                                                    {{ $report->tour_id }}
+                                                    {{ $report->id }}
 
                                                 </span>
 
@@ -557,45 +573,39 @@
 
 
 
-                                            <!-- PAYMENT STATUS -->
-
-                                            <td>
-
-                                                <span class="revenue-payment-status">
-
-                                                    <i class="fas fa-credit-card mr-1"></i>
-
-                                                    {{ $report->payment_status }}
-
-                                                </span>
-
-                                            </td>
-
-
-
-                                            <!-- PAYMENT MODE -->
-
-                                            <td>
-
-                                                <span class="revenue-payment-mode">
-
-                                                    <i class="fas fa-wallet mr-1"></i>
-
-                                                    {{ $report->payment_mode }}
-
-                                                </span>
-
-                                            </td>
-
+                                         
 
 
                                             <!-- RECEIVED AMOUNT -->
+
+                                             <td>
+
+                                                <span class="revenue-received">
+
+                                                    ₹ {{ number_format($report->totalamount, 2) }}
+
+                                                </span>
+
+                                            </td>
+
+                                            
 
                                             <td>
 
                                                 <span class="revenue-received">
 
                                                     ₹ {{ number_format($report->received_amount, 2) }}
+
+                                                </span>
+
+                                            </td>
+
+                                            
+                                             <td>
+
+                                                <span class="revenue-received">
+
+                                                    ₹ {{ number_format($report->discount, 2) }}
 
                                                 </span>
 
@@ -619,33 +629,7 @@
 
                                             <!-- BOOKING STATUS -->
 
-                                            <td>
-
-
-                                                @if($report->booking_status == 1)
-
-                                                    <span class="revenue-status-confirmed">
-
-                                                        <i class="fas fa-check-circle mr-1"></i>
-
-                                                        Confirmed
-
-                                                    </span>
-
-                                                @else
-
-                                                    <span class="revenue-status-pending">
-
-                                                        <i class="fas fa-clock mr-1"></i>
-
-                                                        Pending
-
-                                                    </span>
-
-                                                @endif
-
-
-                                            </td>
+                                          
 
 
                                         </tr>
@@ -719,5 +703,5 @@
 
 </div>
 
-
+<script src="{{asset('public/plugins/jquery/jquery.min.js')}}"></script>
 @endsection

@@ -958,7 +958,8 @@
 
 </div>
 
-<script src="{{asset('plugins/jquery/jquery.min.js')}}"></script>
+<script src="{{asset('public/plugins/jquery/jquery.min.js')}}"></script>
+
 <script>
     
     $('#editDepartmentModal').on('show.bs.modal', function (event) {

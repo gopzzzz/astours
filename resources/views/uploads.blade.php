@@ -862,7 +862,7 @@
                                                 <div class="upload-image-cell">
 
 
-                                                    <img src="{{ asset('uploads/' . $upload->image) }}"
+                                                    <img src="{{ asset('public/uploads/' . $upload->image) }}"
                                                          alt="{{ $upload->image }}"
                                                          class="upload-image">
 
@@ -1190,7 +1190,7 @@
 <!-- SCRIPT -->
 <!-- ================================================= -->
 
-<script src="{{ asset('plugins/jquery/jquery.min.js') }}"></script>
+<script src="{{ asset('public/plugins/jquery/jquery.min.js') }}"></script>
 
 
 <script>

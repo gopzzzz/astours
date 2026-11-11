@@ -6,11 +6,11 @@
   <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
   <!-- Font Awesome Icons -->
-  <link rel="stylesheet" href="{{asset('plugins/fontawesome-free/css/all.min.css')}}">
+  <link rel="stylesheet" href="{{asset('public/plugins/fontawesome-free/css/all.min.css')}}">
   <!-- overlayScrollbars -->
-  <link rel="stylesheet" href="{{asset('plugins/overlayScrollbars/css/OverlayScrollbars.min.css')}}">
+  <link rel="stylesheet" href="{{asset('public/plugins/overlayScrollbars/css/OverlayScrollbars.min.css')}}">
   <!-- Theme style -->
-  <link rel="stylesheet" href="{{asset('dist/css/adminlte.min.css')}}">
+  <link rel="stylesheet" href="{{asset('public/dist/css/adminlte.min.css')}}">
   <style>
     .tour-form-body {
     background: #f7f9fc;
@@ -576,5 +576,44 @@
         padding: 10px;
         font-size: 15px;
     }
+    .pagination-wrapper {
+    margin-top: 20px;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.pagination {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin: 0;
+}
+
+.pagination .page-item .page-link {
+    border: 1px solid #dee2e6;
+    border-radius: 5px;
+    padding: 7px 12px;
+    color: #333;
+    background: #fff;
+    font-size: 14px;
+    text-decoration: none;
+}
+
+.pagination .page-item .page-link:hover {
+    background: #f5f5f5;
+    color: #000;
+}
+
+.pagination .page-item.active .page-link {
+    background: #000;
+    border-color: #000;
+    color: #fff;
+}
+
+.pagination .page-item.disabled .page-link {
+    color: #aaa;
+    background: #f8f8f8;
+    border-color: #ddd;
+}
 </style>
 </head>

@@ -279,54 +279,10 @@
             </div>
         </div>
 
-        <form action="{{ route('bookings.store') }}" method="POST"   enctype="multipart/form-data">
+        <form action="{{ route('bookings.store') }}" method="POST"   enctype="multipart/form-data" id="bookingForm">
             @csrf
 
-            <div class="booking-section">
-                <h6 class="section-title">Customer Details</h6>
-
-                <div class="row g-3">
-
-                    <div class="col-md-4">
-                        <label>Booking Person Name <span>*</span></label>
-                        <input type="text"
-       name="booking_personname"
-       class="form-control"
-       value="{{ old('booking_personname') }}"
-       placeholder="Enter customer name"
-       required>
-
-                    </div>
-
-                    <div class="col-md-4">
-                        <label>Phone Number <span>*</span></label>
-                        <input type="text"
-       name="phonenumber"
-       class="form-control"
-       value="{{ old('phonenumber') }}"
-       placeholder="Enter phone number"
-       required>
-                    </div>
-
-                    <div class="col-md-4">
-                        <label>Email</label>
-                       <input type="email"
-       name="mail"
-       class="form-control"
-       value="{{ old('mail') }}"
-       placeholder="Enter email address">
-                    </div>
-
-                    <div class="col-md-12">
-                        <label>Address</label>
-                      <textarea name="address"
-          class="form-control"
-          rows="3"
-          placeholder="Enter address">{{ old('address') }}</textarea>
-                    </div>
-
-                </div>
-            </div>
+            
 
             <div class="booking-section">
                 <h6 class="section-title">Tour Details</h6>
@@ -388,7 +344,7 @@
             <h6 class="section-title mb-1">Passenger Details</h6>
             <p class="passenger-help">Add the details of all passengers included in this booking.</p>
         </div>
-
+      
         <button type="button" class="btn add-passenger-btn" id="addPassenger">
             <i class="fa fa-plus"></i> Add Passenger
         </button>
@@ -489,12 +445,13 @@
                 <div class="col-md-4">
                     <label>Seat Number</label>
 
-                    <input type="text"
-                           name="passengers[{{ $index }}][seatnumber]"
-                           class="form-control"
-                           value="{{ $passenger['seatnumber'] ?? '' }}"
-                           placeholder="Enter seat number">
-                </div>
+                   <input type="text"
+       name="passengers[{{ $index }}][seatnumber]"
+       class="form-control seat-number"
+       value="{{ $passenger['seatnumber'] ?? '' }}"
+       placeholder="Enter seat number">
+
+<small class="seat-error text-danger" style="display:none;"></small>
 
             </div>
 
@@ -504,6 +461,54 @@
 
 </div>
 </div>
+
+<div class="booking-section">
+                <h6 class="section-title">Emergency Contact  Details</h6>
+
+                <div class="row g-3">
+
+                    
+                    <div class="col-md-4">
+                        <label>Emergency Contact Number <span>*</span></label>
+                        <input type="text"
+       name="phonenumber"
+       class="form-control"
+       value="{{ old('phonenumber') }}"
+       placeholder="Enter phone number"
+       required>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label>Person with Relationship <span>*</span></label>
+                        <input type="text"
+       name="booking_personname"
+       class="form-control"
+       value="{{ old('booking_personname') }}"
+       placeholder="Enter customer name"
+       required>
+
+                    </div>
+
+
+                    <!-- <div class="col-md-4">
+                        <label>Email</label>
+                       <input type="email"
+       name="mail"
+       class="form-control"
+       value="{{ old('mail') }}"
+       placeholder="Enter email address">
+                    </div> -->
+
+                    <!-- <div class="col-md-12">
+                        <label>Address</label>
+                      <textarea name="address"
+          class="form-control"
+          rows="3"
+          placeholder="Enter address">{{ old('address') }}</textarea>
+                    </div> -->
+
+                </div>
+            </div>
 
             <div class="booking-section">
                 <h6 class="section-title">Payment Details</h6>
@@ -566,6 +571,8 @@
     </option>
 </select>
                     </div>
+
+                  
 
                     <div class="col-md-4">
                         <label>Discount</label>
@@ -648,7 +655,7 @@
 </div>
 
 
-<script src="{{asset('plugins/jquery/jquery.min.js')}}"></script>
+<script src="{{asset('public/plugins/jquery/jquery.min.js')}}"></script>
 <script>
 $(document).ready(function () {
 
@@ -732,14 +739,16 @@ $(document).ready(function () {
                                class="form-control">
                     </div>
 
-                    <div class="col-md-4">
-                        <label>Seat Number</label>
+                 <div class="col-md-4">
+    <label>Seat Number</label>
 
-                        <input type="text"
-                               name="passengers[${passengerIndex}][seatnumber]"
-                               class="form-control"
-                               placeholder="Enter seat number">
-                    </div>
+    <input type="text"
+           name="passengers[${passengerIndex}][seatnumber]"
+           class="form-control seat-number"
+           placeholder="Enter seat number">
+
+    <small class="seat-error text-danger" style="display:none;"></small>
+</div>
 
                 </div>
 
@@ -893,6 +902,103 @@ $('#discount').on('input', function () {
 // When received amount changes
 $('#received_amount').on('input', function () {
     calculatePendingAmount();
+});
+
+let seatCheckTimer;
+
+$(document).on('keyup', '.seat-number', function () {
+
+    let seatInput = $(this);
+    let seatNumber = seatInput.val().trim();
+    let tourId = $('#tour_id').val();
+    let errorMessage = seatInput.siblings('.seat-error');
+
+    // Reset
+    seatInput.removeClass('is-invalid');
+    errorMessage.hide().text('');
+
+    clearTimeout(seatCheckTimer);
+
+    if (seatNumber === '' || tourId === '') {
+        return;
+    }
+
+    seatCheckTimer = setTimeout(function () {
+
+        $.ajax({
+
+            url: "{{ url('/check-seat') }}/" +
+                 tourId + "/" +
+                 encodeURIComponent(seatNumber),
+
+            type: "GET",
+            dataType: "json",
+
+           success: function (response) {
+
+    if (response.booked) {
+
+        // Already booked
+        seatInput.addClass('is-invalid');
+
+        errorMessage
+            .text('Seat ' + seatNumber + ' is already booked.')
+            .show();
+
+        seatInput.data('seat-booked', true);
+
+    } else if (!response.valid) {
+
+        // Seat number exceeds maximum seats
+        seatInput.addClass('is-invalid');
+
+        errorMessage
+            .text(response.message)
+            .show();
+
+        seatInput.data('seat-booked', true);
+
+    } else {
+
+        // Seat available
+        seatInput.removeClass('is-invalid');
+
+        errorMessage.hide().text('');
+
+        seatInput.data('seat-booked', false);
+    }
+}
+
+        });
+
+    }, 500);
+});
+
+$('#bookingForm').on('submit', function (e) {
+
+    let invalidSeat = false;
+
+    $('.seat-number').each(function () {
+
+        if ($(this).data('seat-booked') === true) {
+            invalidSeat = true;
+            $(this).addClass('is-invalid');
+        }
+
+    });
+
+    if (invalidSeat) {
+
+        e.preventDefault();
+
+        // Scroll to first invalid seat
+        $('html, body').animate({
+            scrollTop: $('.seat-number.is-invalid').first().offset().top - 100
+        }, 300);
+
+        return false;
+    }
+
 });
 
 });
