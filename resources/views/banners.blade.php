@@ -839,7 +839,11 @@
                                         </th>
 
                                         <th>
+<<<<<<< HEAD
                                             Banner Image (Width * Height) (1265 * 700)
+=======
+                                            Banner Image
+>>>>>>> b5c3e0b96c017bb9aa170d490a335023050c2d38
                                         </th>
 
                                         <th width="190"
@@ -908,7 +912,11 @@
 
                                                 <div class="banner-image-box">
 
+<<<<<<< HEAD
                                                     <img src="{{ asset('public/uploads/banners/' . $banner->bannerimage) }}"
+=======
+                                                    <img src="{{ asset('uploads/banners/' . $banner->bannerimage) }}"
+>>>>>>> b5c3e0b96c017bb9aa170d490a335023050c2d38
                                                          alt="{{ $banner->bannertitle }}"
                                                          class="banner-image">
 
@@ -1156,7 +1164,11 @@
                                 <div class="banner-field">
 
                                     <label>
+<<<<<<< HEAD
                                       Banner Image (Width * Height) (1265 * 700) <span>*</span> 
+=======
+                                        Banner Image <span>*</span>
+>>>>>>> b5c3e0b96c017bb9aa170d490a335023050c2d38
                                     </label>
 
 
@@ -1359,7 +1371,11 @@
                                 <div class="banner-field">
 
                                     <label>
+<<<<<<< HEAD
                                         Banner Image (Width * Height) (1265 * 700)
+=======
+                                        Change Banner Image
+>>>>>>> b5c3e0b96c017bb9aa170d490a335023050c2d38
                                     </label>
 
 
@@ -1473,7 +1489,11 @@
 <!-- JAVASCRIPT -->
 <!-- ================================================= -->
 
+<<<<<<< HEAD
 <script src="{{ asset('public/plugins/jquery/jquery.min.js') }}"></script>
+=======
+<script src="{{ asset('plugins/jquery/jquery.min.js') }}"></script>
+>>>>>>> b5c3e0b96c017bb9aa170d490a335023050c2d38
 
 <script>
 
@@ -1513,7 +1533,11 @@ $(document).ready(function () {
             $('#edit_banner_preview')
                 .attr(
                     'src',
+<<<<<<< HEAD
                     "{{ asset('public/uploads/banners') }}/" + bannerimage
+=======
+                    "{{ asset('uploads/banners') }}/" + bannerimage
+>>>>>>> b5c3e0b96c017bb9aa170d490a335023050c2d38
                 )
                 .show();
 

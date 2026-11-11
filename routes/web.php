@@ -16,6 +16,7 @@ use App\Http\Controllers\BlogsController;
 use App\Http\Controllers\UploadsController;
 use App\Http\Controllers\RevenueReportsController;
 use App\Http\Controllers\CustomerController;
+<<<<<<< HEAD
 use App\Http\Controllers\WebController;
 use App\Http\Controllers\EnquiriesController;
 use App\Http\Controllers\BannersController;
@@ -27,6 +28,12 @@ Route::get('/logout', function (Request $request) {
 
     return redirect('/login');
 })->name('logout');
+=======
+use App\Http\Controllers\EnquiriesController;
+use App\Http\Controllers\BannersController;
+
+
+>>>>>>> b5c3e0b96c017bb9aa170d490a335023050c2d38
 
 
     
@@ -185,6 +192,18 @@ Route::get('/previousbookings/{phone}', [CustomerController::class, 'previousBoo
     
 
 
+<<<<<<< HEAD
+=======
+
+Route::get('/customers', [CustomerController::class, 'index'])
+    ->name('customers.index');
+
+
+
+
+
+
+>>>>>>> b5c3e0b96c017bb9aa170d490a335023050c2d38
 Route::get('/enquiries', [EnquiriesController::class, 'index'])
     ->name('enquiries.index');
 
@@ -218,6 +237,7 @@ Route::delete('/banners/{id}', [BannersController::class, 'destroy'])
 
 
 
+<<<<<<< HEAD
 });
 
 
@@ -253,6 +273,24 @@ Route::post('/contact-submit', [WebController::class, 'submit'])
 
         Route::get('/reviewslist', [WebController::class, 'reviewslist'])
     ->name('reviewslist');
+=======
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+>>>>>>> b5c3e0b96c017bb9aa170d490a335023050c2d38
  
 
 require __DIR__.'/auth.php';

@@ -1480,7 +1480,11 @@
 <!-- JAVASCRIPT -->
 <!-- ================================================= -->
 
+<<<<<<< HEAD
 <script src="{{ asset('public/plugins/jquery/jquery.min.js') }}"></script>
+=======
+<script src="{{ asset('plugins/jquery/jquery.min.js') }}"></script>
+>>>>>>> b5c3e0b96c017bb9aa170d490a335023050c2d38
 
 <script>
 
